@@ -187,20 +187,6 @@ export function Dashboard() {
     }
   }
 
-  const handleToggleEventComplete = async (id: number) => {
-    const event = events.find(e => e.id === id)
-    if (!event) return
-
-    try {
-      await eventsApi.update(id, { completed: !event.completed })
-      setEvents(events.map(e =>
-        e.id === id ? { ...e, completed: !e.completed } : e
-      ))
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update event")
-      console.error("Error updating event:", err)
-    }
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -246,23 +232,10 @@ export function Dashboard() {
         ) : (
           <div className="space-y-2">
             {events.map(event => (
-              <div key={event.id} className={`rounded-lg border bg-card p-4 hover:shadow-md transition-shadow ${event.completed ? "opacity-60" : ""}`}>
+              <div key={event.id} className="rounded-lg border bg-card p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start gap-3">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`h-6 w-6 p-0 shrink-0 ${event.completed ? "text-green-500" : "text-muted-foreground"}`}
-                    onClick={() => handleToggleEventComplete(event.id)}
-                    title={event.completed ? "Mark as incomplete" : "Mark as completed"}
-                  >
-                    {event.completed ? (
-                      <CheckCircle2 className="h-5 w-5" />
-                    ) : (
-                      <Circle className="h-5 w-5" />
-                    )}
-                  </Button>
                   <div className="flex-1">
-                    <h3 className={`font-medium ${event.completed ? "text-muted-foreground line-through" : ""}`}>
+                    <h3 className="font-medium">
                       {event.title}
                     </h3>
                     <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
@@ -272,7 +245,7 @@ export function Dashboard() {
                       </span>
                     </div>
                     {event.notes && (
-                      <p className={`mt-2 text-sm text-muted-foreground ${event.completed ? "line-through" : ""}`}>
+                      <p className="mt-2 text-sm text-muted-foreground">
                         {event.notes}
                       </p>
                     )}
