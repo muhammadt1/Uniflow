@@ -1,6 +1,6 @@
 const createTask = async (req, res) => {
   const { prisma } = req;
-  const { title, description, deadline, priority, userId } = req.body;
+  const { title, description, deadline, priority, userId, groupId } = req.body;
 
   if (!title || !deadline || !priority || !userId) {
     return res.status(400).json({ error: 'Title, deadline, priority, and userId are required.' });
@@ -14,6 +14,7 @@ const createTask = async (req, res) => {
         deadline,
         priority,
         userId,
+        groupId: groupId || null,
       },
     });
     res.status(201).json(task);
@@ -26,7 +27,11 @@ const createTask = async (req, res) => {
 const getTasks = async (req, res) => {
   const { prisma } = req;
   try {
-    const tasks = await prisma.task.findMany();
+    const tasks = await prisma.task.findMany({
+      include: {
+        group: true,
+      },
+    });
     res.json(tasks);
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -40,6 +45,9 @@ const getTaskById = async (req, res) => {
   try {
     const task = await prisma.task.findUnique({
       where: { id: Number(id) },
+      include: {
+        group: true,
+      },
     });
     if (!task) {
       return res.status(404).json({ error: 'Task not found.' });
@@ -54,17 +62,28 @@ const getTaskById = async (req, res) => {
 const updateTask = async (req, res) => {
   const { prisma } = req;
   const { id } = req.params;
-  const { title, description, deadline, priority, completed } = req.body;
+  const { title, description, deadline, priority, completed, groupId } = req.body;
 
   try {
+    const updateData = {};
+    
+    // Only include fields that are provided
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (deadline !== undefined) updateData.deadline = deadline;
+    if (priority !== undefined) updateData.priority = priority;
+    if (completed !== undefined) updateData.completed = completed;
+    
+    // Only include groupId if it's provided (can be null to remove group)
+    if (groupId !== undefined) {
+      updateData.groupId = groupId || null;
+    }
+
     const task = await prisma.task.update({
       where: { id: Number(id) },
-      data: {
-        title,
-        description,
-        deadline,
-        priority,
-        completed,
+      data: updateData,
+      include: {
+        group: true,
       },
     });
     res.json(task);

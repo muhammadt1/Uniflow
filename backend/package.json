@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "seed": "dotenv -- node prisma/seed.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "migrate:dev": "dotenv -e .env -- npx prisma migrate dev",
+    "migrate:deploy": "dotenv -e .env -- npx prisma migrate deploy",
+    "prisma:generate": "dotenv -e .env -- npx prisma generate",
+    "prisma:studio": "dotenv -e .env -- npx prisma studio"
   },
   "type": "commonjs",
   "dependencies": {

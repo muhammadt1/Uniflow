@@ -1,6 +1,6 @@
 const createEvent = async (req, res) => {
   const { prisma } = req;
-  const { title, notes, startTime, endTime, userId } = req.body;
+  const { title, notes, startTime, endTime, userId, groupId } = req.body;
 
   if (!title || !startTime || !endTime || !userId) {
     return res.status(400).json({ error: 'Title, startTime, endTime, and userId are required.' });
@@ -14,6 +14,10 @@ const createEvent = async (req, res) => {
         startTime,
         endTime,
         userId,
+        groupId: groupId || null,
+      },
+      include: {
+        group: true,
       },
     });
     res.status(201).json(event);
@@ -26,7 +30,11 @@ const createEvent = async (req, res) => {
 const getEvents = async (req, res) => {
   const { prisma } = req;
   try {
-    const events = await prisma.event.findMany();
+    const events = await prisma.event.findMany({
+      include: {
+        group: true,
+      },
+    });
     res.json(events);
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -40,6 +48,9 @@ const getEventById = async (req, res) => {
   try {
     const event = await prisma.event.findUnique({
       where: { id: Number(id) },
+      include: {
+        group: true,
+      },
     });
     if (!event) {
       return res.status(404).json({ error: 'Event not found.' });
@@ -54,16 +65,22 @@ const getEventById = async (req, res) => {
 const updateEvent = async (req, res) => {
   const { prisma } = req;
   const { id } = req.params;
-  const { title, notes, startTime, endTime } = req.body;
+  const { title, notes, startTime, endTime, completed, groupId } = req.body;
 
   try {
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (notes !== undefined) updateData.notes = notes;
+    if (startTime !== undefined) updateData.startTime = startTime;
+    if (endTime !== undefined) updateData.endTime = endTime;
+    if (completed !== undefined) updateData.completed = completed;
+    if (groupId !== undefined) updateData.groupId = groupId || null;
+
     const event = await prisma.event.update({
       where: { id: Number(id) },
-      data: {
-        title,
-        notes,
-        startTime,
-        endTime,
+      data: updateData,
+      include: {
+        group: true,
       },
     });
     res.json(event);
