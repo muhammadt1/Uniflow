@@ -315,8 +315,8 @@ export function CalendarPage() {
   const datesWithTasks = tasks.map(task => new Date(task.deadline))
 
   return (
-    <div className="flex flex-col w-full h-full min-h-0 p-4 sm:p-6 lg:p-8">
-      <div className="w-full flex flex-col h-full min-h-0">
+    <div className="flex flex-col w-full p-4 sm:p-6 lg:p-8 min-h-full">
+      <div className="w-full flex flex-col">
         {/* Header with buttons */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <h1 className="text-2xl font-bold">Calendar</h1>
@@ -340,14 +340,14 @@ export function CalendarPage() {
         )}
 
         {/* Calendar and Events side by side */}
-        <div className="flex gap-6 flex-1 min-h-0">
+        <div className="flex gap-6 items-start">
           {/* Calendar - takes remaining space */}
-          <div className="flex-1 flex justify-center items-start overflow-hidden">
+          <div className="flex-1 flex justify-center min-w-0">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
-              className="rounded-lg border [--cell-size:--spacing(16)] sm:[--cell-size:--spacing(18)] md:[--cell-size:--spacing(20)]"
+              className="[--cell-size:--spacing(16)] sm:[--cell-size:--spacing(18)] md:[--cell-size:--spacing(20)]"
               buttonVariant="ghost"
               modifiers={{
                 hasEvents: (date) => datesWithEvents.some(d => isSameDay(d, date)),
