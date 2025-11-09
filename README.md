@@ -54,11 +54,10 @@ Initial designs were created using Lofi and Hofi prototypes to map out the user 
 
 ## 4. Features
 
-* ✅ **Task Management System:** Create, edit, and organize tasks with ease.
-* 🗓️ **Intuitive Calendar Integration:** View deadlines, events, and schedules in one centralized view.
-* 🔖 **Priority Labels and Dark Mode:** Customize the user experience for accessibility and convenience.
-* 🧩 **Categorization:** Group tasks by subject or type for better organization.
-* 📱 **Responsive UI:** Optimized for both desktop and mobile, ensuring accessibility anytime, anywhere.
+* **Task Management System:** Create, edit, and organize tasks with ease.
+* **Intuitive Calendar Integration:** View deadlines, events, and schedules in one centralized view.
+* **Priority Labels and Dark Mode:** Customize the user experience for accessibility and convenience.
+* **Categorization:** Group tasks by subject or type for better organization.
 
 ---
 
